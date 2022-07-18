@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Rock Paper Scissors</title>
-    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    
+    <h1>Rock Paper Scissors</h1>
+    <div id="score-container">
+        <div id="player-score-container">Player: <span id="player-score">0</span></div>
+        <div id="computer-score-container">Computer: <span id="computer-score">0</span></div>
+    </div>
+    <div id="button-container">
+        <div class="selection" data-choice="rock">Rock</div>
+        <div class="selection" data-choice="paper">Paper</div>
+        <div class="selection" data-choice="scissors">Scissors</div>
+    </div>
+    <div id="message-container">
+    </div>
 </body>
 </html>

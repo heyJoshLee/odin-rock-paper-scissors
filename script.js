@@ -1,33 +1,40 @@
-
-
 // TODO: Refactor to remove global variables.
-// TODO: Fix prompting and console.log making it difficult for the player to see what's happening
-//       in the game until the whole game is over.
 
 const choices = ['rock', 'paper', 'scissors'];
 let round;
 let playerScore;
 let computerScore; 
+const messageContainer = document.querySelector('#message-container');
+const playerScoreHTML = document.querySelector('#player-score');
+const computerScoreHTML = document.querySelector('#computer-score');
+const buttons = document.querySelectorAll('.selection');
+const scoreLimit = 5;
+
+function addMessageText(textToAdd) {
+    const newMessage = document.createElement('p');
+    newMessage.classList.add('message');
+    messageContainer.append(textToAdd, newMessage);
+}
 
 function resetRoundAndScores() {
+    clearMessages();
     round = 1;
     playerScore = 0;
     computerScore = 0;
+    setScores();
 }
 
-function getPlayerChoice() {
-    let playerInput;
+function clearMessages() {
+    messageContainer.textContent = "";
+}
 
-    while (!playerInput) {
-        playerInput = prompt('Chose rock, paper, or scissors').toLowerCase();
-        if (!choices.includes(playerInput)) {
-            console.log(`You typed ${playerInput}. That is not a valid choice. Please choose again.`);
-            playerInput = false;
-        } else {
-            console.log(`Your choice: ${playerInput}`);
-        }
-    }
-    return playerInput;
+function setScores() {
+    playerScoreHTML.textContent = playerScore;
+    computerScoreHTML.textContent = computerScore;
+}
+
+function displayPlayerChoice(choice) {
+    addMessageText(`You selected ${choice}.`)
 }
 
 function getComputerChoice() {
@@ -35,40 +42,78 @@ function getComputerChoice() {
 }
 
 function playRound(playerChoice, computerChoice) {
-    console.log(`ROUND ${round}`);
-    console.log(`Player chose ${playerChoice} and computer chose ${computerChoice}.`)
+    if (isWinner()) { return };
+    clearMessages();
+    displayPlayerChoice(playerChoice);
+    addMessageText(`ROUND ${round}`);
+    addMessageText(`Player chose ${playerChoice} and computer chose ${computerChoice}.`)
+
+
+
     if (playerChoice === computerChoice) {
-        console.log('Tie.');
+        addMessageText('Tie.');
     } else if (playerChoice === 'rock' && computerChoice === 'scissors' ||
         playerChoice === 'paper' && computerChoice === 'rock' ||
         playerChoice === 'scissors' && computerChoice === 'paper') {
-        console.log(`${playerChoice.slice(0,1).toUpperCase() + playerChoice.slice(1)} beats ${computerChoice}.`)
-        console.log('You win!');
+        addMessageText(`${playerChoice.slice(0,1).toUpperCase() + playerChoice.slice(1)} beats ${computerChoice}.`)
+        addMessageText('You win!');
         playerScore++;
+        setScores();
     } else {
-        console.log(`${computerChoice.slice(0,1).toUpperCase() + computerChoice.slice(1)} beats ${playerChoice}.`);
-        console.log('You lose!');
+        addMessageText(`${computerChoice.slice(0,1).toUpperCase() + computerChoice.slice(1)} beats ${playerChoice}.`);
+        addMessageText('You lose!');
         computerScore++;
+        setScores();
     }
-    console.log(`Current score: Player: ${playerScore}, Computer: ${computerScore}.`);
+    addMessageText(`Current score: Player: ${playerScore}, Computer: ${computerScore}.`);
+
+
+    if (isWinner()) {
+        clearMessages();
+        if (playerScore > computerScore ){
+            addMessageText(`You Won! Thank you for playing!`);
+        } else {
+            addMessageText(`You Lost! Thank you for playing!`);
+        }
+    }
+}
+
+function isWinner() {
+    return playerScore >= scoreLimit || computerScore >= scoreLimit;
 }
 
 function game() {
-    resetRoundAndScores();
-    while (round <= 5) {
-        playRound(getPlayerChoice(), getComputerChoice());
-        round++;
-    }
-    console.log('Final score:');
-    console.log(`Player score ${playerScore}. Computer score ${computerScore}.`);
-    if (playerScore > computerScore) {
-        console.log('Congratulations, you win!');
-    } else if (computerScore > playerScore) {
-        console.log('Sorry, you lose.');
-    } else {
-        console.log('It\'s a tie.');
-    }
-    console.log(`Thank you for playing!`);
+
+        resetRoundAndScores();
+        //while (round <= 5) {
+            playRound(getPlayerChoice(), getComputerChoice());
+            round++;
+        //}
+        addMessageText('Final score:');
+        addMessageText(`Player score ${playerScore}. Computer score ${computerScore}.`);
+        if (playerScore > computerScore) {
+            addMessageText('Congratulations, you win!');
+        } else if (computerScore > playerScore) {
+            addMessageText('Sorry, you lose.');
+        } else {
+            addMessageText('It\'s a tie.');
+        }
+
+
 }
 
-game();
+
+function setUpButtonEvents() {
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            getPlayerChoiceAndStartRound(button.getAttribute('data-choice'));
+        });
+    });
+}
+
+function getPlayerChoiceAndStartRound(choice) {
+    playRound(choice, getComputerChoice());
+}
+
+setUpButtonEvents();
+resetRoundAndScores();

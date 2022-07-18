@@ -1,0 +1,34 @@
+h1 {
+    text-align: center;
+}
+
+#button-container {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+
+}
+
+.selection {
+    flex: 1;
+    padding: 10px;
+    background-color: cadetblue;
+    color: snow;
+    text-align: center;
+    font-weight: bold;
+}
+
+#message-container {
+    margin-top: 20px;
+}
+
+#score-container {
+    padding: 10px;
+    text-align: left;
+}
+
+#player-score-container,
+#computer-score-container {
+    display: inline-block;
+    width: 100px;
+}
